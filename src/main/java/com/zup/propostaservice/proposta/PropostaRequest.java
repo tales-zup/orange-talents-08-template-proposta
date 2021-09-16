@@ -1,6 +1,7 @@
 package com.zup.propostaservice.proposta;
 
 import com.zup.propostaservice.validators.CPFOrCNPJ;
+import com.zup.propostaservice.validators.ValorUnico;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -11,9 +12,12 @@ import java.math.BigDecimal;
 public class PropostaRequest {
 
     @CPFOrCNPJ
+    @NotNull
+    @ValorUnico(classe = Proposta.class, nomeDoCampo = "documento", message = "Já existe uma proposta com esse documento.")
     private String documento;
 
     @Email
+    @NotBlank
     private String email;
 
     @NotBlank
