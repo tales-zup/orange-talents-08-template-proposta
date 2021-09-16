@@ -79,6 +79,10 @@ public class Proposta {
         this.statusProposta = statusProposta;
     }
 
+    public StatusProposta getStatusProposta() {
+        return statusProposta;
+    }
+
     public void setNumeroCartao(String numeroCartao) {
         this.numeroCartao = numeroCartao;
     }

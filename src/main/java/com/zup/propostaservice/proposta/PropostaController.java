@@ -8,12 +8,10 @@ import com.zup.propostaservice.feign.contas.ContasApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 import java.net.URI;
 
@@ -41,6 +39,15 @@ public class PropostaController {
         URI uri = uriBuilder.path("/propostas/{id}").buildAndExpand(proposta.getId()).toUri();
         PropostaDto dto = new PropostaDto(proposta);
         return ResponseEntity.created(uri).body(dto);
+    }
+
+    @GetMapping("/{id}")
+    public PropostaDetalhesDto detalharProposta(@PathVariable("id") Long id) {
+
+        Proposta proposta = propostaRepository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("Essa proposta não existe."));
+
+        return new PropostaDetalhesDto(proposta);
     }
 
 }

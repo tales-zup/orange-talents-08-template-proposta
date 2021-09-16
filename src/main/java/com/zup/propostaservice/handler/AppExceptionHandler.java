@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +32,12 @@ public class AppExceptionHandler {
             resposta.add(erro);
         });
         return resposta;
+    }
+
+    @ResponseStatus(code = HttpStatus.NOT_FOUND)
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ErroDeRequest handleEntityNotFound(EntityNotFoundException exception) {
+        return new ErroDeRequest("id", exception.getMessage());
     }
 
 }
