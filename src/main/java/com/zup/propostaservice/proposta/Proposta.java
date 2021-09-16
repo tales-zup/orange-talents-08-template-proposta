@@ -1,7 +1,6 @@
 package com.zup.propostaservice.proposta;
 
 import com.zup.propostaservice.validators.CPFOrCNPJ;
-import com.zup.propostaservice.validators.ValorUnico;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -35,6 +34,9 @@ public class Proposta {
     @NotNull
     @Positive
     private BigDecimal salario;
+
+    @Enumerated(EnumType.STRING)
+    private StatusProposta statusProposta;
 
     public Proposta(String documento, String email, String nome, String endereco, BigDecimal salario) {
         this.documento = documento;
