@@ -1,30 +1,28 @@
 package com.zup.propostaservice.proposta;
 
-import com.zup.propostaservice.validators.CPFOrCNPJ;
-
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
 import java.math.BigDecimal;
 
-public class PropostaRequest {
+public class PropostaDto {
 
-    @CPFOrCNPJ
+    private Long id;
     private String documento;
-
-    @Email
     private String email;
-
-    @NotBlank
     private String nome;
-
-    @NotBlank
     private String endereco;
-
-    @NotNull
-    @Positive
     private BigDecimal salario;
+
+    public PropostaDto(Proposta proposta) {
+        this.id = proposta.getId();
+        this.documento = proposta.getDocumento();
+        this.email = proposta.getEmail();
+        this.nome = proposta.getNome();
+        this.endereco = proposta.getEndereco();
+        this.salario = proposta.getSalario();
+    }
+
+    public Long getId() {
+        return id;
+    }
 
     public String getDocumento() {
         return documento;
@@ -44,9 +42,5 @@ public class PropostaRequest {
 
     public BigDecimal getSalario() {
         return salario;
-    }
-
-    public Proposta toModel() {
-        return new Proposta(documento, email, nome, endereco, salario);
     }
 }

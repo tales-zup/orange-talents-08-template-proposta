@@ -1,5 +1,7 @@
 package com.zup.propostaservice.proposta;
 
+import com.zup.propostaservice.validators.CPFOrCNPJ;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -17,9 +19,12 @@ public class Proposta {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @CPFOrCNPJ
+    @NotNull
     private String documento;
 
     @Email
+    @NotBlank
     private String email;
 
     @NotBlank
