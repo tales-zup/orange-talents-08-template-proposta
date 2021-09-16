@@ -38,6 +38,11 @@ public class Proposta {
     @Enumerated(EnumType.STRING)
     private StatusProposta statusProposta;
 
+    private String numeroCartao;
+
+    public Proposta() {
+    }
+
     public Proposta(String documento, String email, String nome, String endereco, BigDecimal salario) {
         this.documento = documento;
         this.email = email;
@@ -70,11 +75,11 @@ public class Proposta {
         return salario;
     }
 
-    public StatusProposta getStatusProposta() {
-        return statusProposta;
-    }
-
     public void setStatusProposta(StatusProposta statusProposta) {
         this.statusProposta = statusProposta;
+    }
+
+    public void setNumeroCartao(String numeroCartao) {
+        this.numeroCartao = numeroCartao;
     }
 }
