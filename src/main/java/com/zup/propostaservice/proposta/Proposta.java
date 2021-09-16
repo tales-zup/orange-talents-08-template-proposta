@@ -3,10 +3,7 @@ package com.zup.propostaservice.proposta;
 import com.zup.propostaservice.validators.CPFOrCNPJ;
 import com.zup.propostaservice.validators.ValorUnico;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -22,6 +19,7 @@ public class Proposta {
 
     @CPFOrCNPJ
     @NotNull
+    @Column(unique = true)
     private String documento;
 
     @Email
