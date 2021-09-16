@@ -4,7 +4,13 @@ public class AnaliseFinanceiraRequest {
 
     private String documento;
     private String nome;
-    private String idProposta;
+    private Long idProposta;
+
+    public AnaliseFinanceiraRequest(String documento, String nome, Long idProposta) {
+        this.documento = documento;
+        this.nome = nome;
+        this.idProposta = idProposta;
+    }
 
     public String getDocumento() {
         return documento;
@@ -14,7 +20,7 @@ public class AnaliseFinanceiraRequest {
         return nome;
     }
 
-    public String getIdProposta() {
+    public Long getIdProposta() {
         return idProposta;
     }
 }

@@ -69,4 +69,12 @@ public class Proposta {
     public BigDecimal getSalario() {
         return salario;
     }
+
+    public StatusProposta getStatusProposta() {
+        return statusProposta;
+    }
+
+    public void setStatusProposta(StatusProposta statusProposta) {
+        this.statusProposta = statusProposta;
+    }
 }

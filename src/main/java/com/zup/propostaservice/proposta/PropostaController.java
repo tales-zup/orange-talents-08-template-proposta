@@ -1,7 +1,11 @@
 package com.zup.propostaservice.proposta;
 
+import com.zup.propostaservice.feign.analisefinanceira.AnaliseFinanceiraApi;
+import com.zup.propostaservice.feign.analisefinanceira.AnaliseFinanceiraRequest;
+import com.zup.propostaservice.feign.analisefinanceira.AnaliseFinanceiraResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,9 +22,18 @@ public class PropostaController {
     @Autowired
     private PropostaRepository propostaRepository;
 
+    @Autowired
+    private AnaliseFinanceiraApi analiseFinanceiraApi;
+
     @PostMapping
+    @Transactional
     public ResponseEntity cadastrarProposta(@RequestBody @Valid PropostaRequest request, UriComponentsBuilder uriBuilder) {
         Proposta proposta = request.toModel();
+        proposta = propostaRepository.save(proposta);
+
+        AnaliseFinanceiraResponse analiseFinanceiraResponse = analiseFinanceiraApi.consultaDadosCliente(
+                new AnaliseFinanceiraRequest(proposta.getDocumento(), proposta.getNome(), proposta.getId()));
+        proposta.setStatusProposta(StatusProposta.converter(analiseFinanceiraResponse.getResultadoSolicitacao()));
         proposta = propostaRepository.save(proposta);
 
         URI uri = uriBuilder.path("/propostas/{id}").buildAndExpand(proposta.getId()).toUri();
