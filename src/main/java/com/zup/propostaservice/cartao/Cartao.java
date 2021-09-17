@@ -41,4 +41,8 @@ public class Cartao {
     public void setProposta(Proposta proposta) {
         this.proposta = proposta;
     }
+
+    public String getId() {
+        return id;
+    }
 }
