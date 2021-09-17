@@ -134,16 +134,16 @@ services:
       VAULT_TOKEN: ee413645-dbe8-4848-afc6-6bb2768ada75
       VAULT_ADDR: http://127.0.0.1:8200
 
-#  proposta:
-#    image: tales/proposta-service
-#    ports:
-#      - "8080:8080"
-#    environment:
-#      ANALISE_FINANCEIRA_URL: http://analise:9999/api
-#      CONTAS_URL: http://contas:8888/api
-#    depends_on:
-#      - contas
-#      - transacoes
+  proposta:
+    image: tales/proposta-service
+    ports:
+      - "8080:8080"
+    environment:
+      ANALISE_FINANCEIRA_URL: http://analise:9999/api
+      CONTAS_URL: http://contas:8888/api
+    depends_on:
+      - contas
+      - transacoes
 
 volumes:
   grafana-volume:
