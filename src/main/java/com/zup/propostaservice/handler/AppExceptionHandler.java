@@ -40,4 +40,10 @@ public class AppExceptionHandler {
         return new ErroDeRequest("id", exception.getMessage());
     }
 
+    @ResponseStatus(code = HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ErroDeRequest handleIllegalArgumentException(IllegalArgumentException exception) {
+        return new ErroDeRequest("id", exception.getMessage());
+    }
+
 }
