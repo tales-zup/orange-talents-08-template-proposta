@@ -3,8 +3,6 @@ package com.zup.propostaservice.proposta;
 import com.zup.propostaservice.feign.analisefinanceira.AnaliseFinanceiraApi;
 import com.zup.propostaservice.feign.analisefinanceira.AnaliseFinanceiraRequest;
 import com.zup.propostaservice.feign.analisefinanceira.AnaliseFinanceiraResponse;
-import com.zup.propostaservice.feign.contas.ConsultaCartoesResponse;
-import com.zup.propostaservice.feign.contas.ContasApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
