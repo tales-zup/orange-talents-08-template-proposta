@@ -137,10 +137,11 @@ services:
   proposta:
     image: tales/proposta-service
     ports:
-      - "8080:8080"
+      - 8080:8081
     environment:
       ANALISE_FINANCEIRA_URL: http://analise:9999/api
       CONTAS_URL: http://contas:8888/api
+      KEYCLOAK_AUTH_SERVER_URL: http://keycloak:8080/auth
     depends_on:
       - contas
       - transacoes

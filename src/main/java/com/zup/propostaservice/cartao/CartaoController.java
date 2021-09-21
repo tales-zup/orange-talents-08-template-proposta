@@ -1,5 +1,9 @@
 package com.zup.propostaservice.cartao;
 
+import com.zup.propostaservice.avisodeviagem.AvisoDeViagem;
+import com.zup.propostaservice.avisodeviagem.AvisoDeViagemDto;
+import com.zup.propostaservice.avisodeviagem.AvisoDeViagemRepository;
+import com.zup.propostaservice.avisodeviagem.AvisoDeViagemRequest;
 import com.zup.propostaservice.biometria.Biometria;
 import com.zup.propostaservice.biometria.BiometriaDto;
 import com.zup.propostaservice.biometria.BiometriaRepository;
@@ -29,6 +33,9 @@ public class CartaoController {
 
     @Autowired
     private BloqueioCartaoRepository bloqueioCartaoRepository;
+
+    @Autowired
+    private AvisoDeViagemRepository avisoDeViagemRepository;
 
     @Autowired
     private ContasApi contasApi;
@@ -69,6 +76,23 @@ public class CartaoController {
         BloqueioCartao bloqueioCartao = new BloqueioCartao(cartao, true, request.getRemoteAddr(), request.getHeader("User-Agent"));
         bloqueioCartaoRepository.save(bloqueioCartao);
         return new BloqueioCartaoDto(bloqueioCartao);
+    }
+
+    @PostMapping("/{id}/aviso-de-viagem")
+    public AvisoDeViagemDto cadastrarAvisoDeViagem(
+            @PathVariable("id") String idCartao,
+            @RequestBody @Valid AvisoDeViagemRequest avisoDeViagemRequest,
+            HttpServletRequest request) {
+
+        Cartao cartao = cartaoRepository.findById(idCartao).orElseThrow(
+                () -> new EntityNotFoundException("Esse cartão não existe."));
+
+        AvisoDeViagem avisoDeViagem = avisoDeViagemRequest
+                .toModel(cartao, request.getRemoteAddr(), request.getHeader("User-Agent"));
+
+        avisoDeViagem = avisoDeViagemRepository.save(avisoDeViagem);
+        return new AvisoDeViagemDto(avisoDeViagem);
+
     }
 
 }
