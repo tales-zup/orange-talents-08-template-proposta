@@ -4,10 +4,11 @@ import com.zup.propostaservice.biometria.Biometria;
 import com.zup.propostaservice.biometria.BiometriaDto;
 import com.zup.propostaservice.biometria.BiometriaRepository;
 import com.zup.propostaservice.biometria.BiometriaRequest;
-import com.zup.propostaservice.proposta.PropostaDto;
-import javassist.tools.web.BadHttpRequest;
+import com.zup.propostaservice.feign.contas.BloquearCartaoRequest;
+import com.zup.propostaservice.feign.contas.ContasApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -29,6 +30,9 @@ public class CartaoController {
     @Autowired
     private BloqueioCartaoRepository bloqueioCartaoRepository;
 
+    @Autowired
+    private ContasApi contasApi;
+
     @PostMapping("/{id}/cadastrar-biometria")
     public ResponseEntity cadastrarBiometriaNoCartao(
             @PathVariable("id") String idCartao,
@@ -48,6 +52,7 @@ public class CartaoController {
     }
 
     @PostMapping("/{id}/bloquear")
+    @Transactional
     public BloqueioCartaoDto cadastrarBloqueioCartao(@PathVariable("id") String idCartao, HttpServletRequest request) {
 
         Cartao cartao = cartaoRepository.findById(idCartao).orElseThrow(
@@ -56,6 +61,10 @@ public class CartaoController {
         if(!bloqueioCartaoRepository.findByAtivoAndCartao_Id(true, idCartao).isEmpty()) {
             throw new IllegalArgumentException("Esse cartão já está bloqueado.");
         }
+
+        contasApi.bloquearCartao(idCartao, new BloquearCartaoRequest("proposta-service"));
+        cartao.setStatusCartao(StatusCartao.BLOQUEADO);
+        cartaoRepository.save(cartao);
 
         BloqueioCartao bloqueioCartao = new BloqueioCartao(cartao, true, request.getRemoteAddr(), request.getHeader("User-Agent"));
         bloqueioCartaoRepository.save(bloqueioCartao);

@@ -2,9 +2,7 @@ package com.zup.propostaservice.cartao;
 
 import com.zup.propostaservice.proposta.Proposta;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
@@ -24,6 +22,10 @@ public class Cartao {
     @NotNull
     private BigDecimal limite;
 
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private StatusCartao statusCartao;
+
     @ManyToOne
     private Proposta proposta;
 
@@ -35,11 +37,16 @@ public class Cartao {
         this.emitidoEm = emitidoEm;
         this.titular = titular;
         this.limite = limite;
+        this.statusCartao = StatusCartao.ATIVO;
         this.proposta = proposta;
     }
 
     public void setProposta(Proposta proposta) {
         this.proposta = proposta;
+    }
+
+    public void setStatusCartao(StatusCartao statusCartao) {
+        this.statusCartao = statusCartao;
     }
 
     public String getId() {
