@@ -8,6 +8,7 @@ import com.zup.propostaservice.biometria.Biometria;
 import com.zup.propostaservice.biometria.BiometriaDto;
 import com.zup.propostaservice.biometria.BiometriaRepository;
 import com.zup.propostaservice.biometria.BiometriaRequest;
+import com.zup.propostaservice.feign.contas.AvisoViagemApiContaRequest;
 import com.zup.propostaservice.feign.contas.BloquearCartaoRequest;
 import com.zup.propostaservice.feign.contas.ContasApi;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,6 +90,9 @@ public class CartaoController {
 
         AvisoDeViagem avisoDeViagem = avisoDeViagemRequest
                 .toModel(cartao, request.getRemoteAddr(), request.getHeader("User-Agent"));
+
+        contasApi.avisarViagem(idCartao,
+                new AvisoViagemApiContaRequest(avisoDeViagem.getDestino(), avisoDeViagem.getDataTermino()));
 
         avisoDeViagem = avisoDeViagemRepository.save(avisoDeViagem);
         return new AvisoDeViagemDto(avisoDeViagem);
