@@ -1,7 +1,5 @@
 package com.zup.propostaservice.feign.contas;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 import java.time.LocalDate;
 
 public class AvisoViagemApiContaRequest {

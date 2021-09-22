@@ -8,8 +8,13 @@ import com.zup.propostaservice.biometria.Biometria;
 import com.zup.propostaservice.biometria.BiometriaDto;
 import com.zup.propostaservice.biometria.BiometriaRepository;
 import com.zup.propostaservice.biometria.BiometriaRequest;
+import com.zup.propostaservice.carteira.Carteira;
+import com.zup.propostaservice.carteira.CarteiraDto;
+import com.zup.propostaservice.carteira.CarteiraRepository;
+import com.zup.propostaservice.carteira.CarteiraRequest;
 import com.zup.propostaservice.feign.contas.AvisoViagemApiContaRequest;
 import com.zup.propostaservice.feign.contas.BloquearCartaoRequest;
+import com.zup.propostaservice.feign.contas.CadastroCarteiraApiContaRequest;
 import com.zup.propostaservice.feign.contas.ContasApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -39,10 +44,13 @@ public class CartaoController {
     private AvisoDeViagemRepository avisoDeViagemRepository;
 
     @Autowired
+    private CarteiraRepository carteiraRepository;
+
+    @Autowired
     private ContasApi contasApi;
 
     @PostMapping("/{id}/cadastrar-biometria")
-    public ResponseEntity cadastrarBiometriaNoCartao(
+    public ResponseEntity<BiometriaDto> cadastrarBiometriaNoCartao(
             @PathVariable("id") String idCartao,
             @RequestBody @Valid BiometriaRequest request,
             UriComponentsBuilder uriBuilder) {
@@ -96,6 +104,31 @@ public class CartaoController {
 
         avisoDeViagem = avisoDeViagemRepository.save(avisoDeViagem);
         return new AvisoDeViagemDto(avisoDeViagem);
+
+    }
+
+    @PostMapping("{id}/cadastrar-carteira")
+    public ResponseEntity<CarteiraDto> cadastrarCarteira(
+            @PathVariable("id") String idCartao,
+            @RequestBody @Valid CarteiraRequest request,
+            UriComponentsBuilder uriBuilder) {
+
+        Cartao cartao = cartaoRepository.findById(idCartao).orElseThrow(
+                () -> new EntityNotFoundException("Esse cartão não existe."));
+
+        if(carteiraRepository.existsByCarteiraAndCartao_Id(request.getCarteira(), idCartao)){
+            throw new IllegalArgumentException("Esse cartão já é associado a essa carteira.");
+        }
+
+        contasApi.cadastrarCarteira(idCartao,
+                new CadastroCarteiraApiContaRequest(request.getEmail(), request.getCarteira()));
+
+        Carteira carteira = request.toModel(cartao);
+        carteira = carteiraRepository.save(carteira);
+
+        URI uri = uriBuilder.path("/carteiras/{id}").buildAndExpand(carteira.getId()).toUri();
+        CarteiraDto dto = new CarteiraDto(carteira);
+        return ResponseEntity.created(uri).body(dto);
 
     }
 

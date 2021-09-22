@@ -15,4 +15,7 @@ public interface ContasApi {
     @PostMapping("/cartoes/{id}/avisos")
     AvisoViagemApiContaResponse avisarViagem(@PathVariable("id") String id, AvisoViagemApiContaRequest request);
 
+    @PostMapping("/cartoes/{id}/carteiras")
+    CadastroCarteiraApiContaResponse cadastrarCarteira(@PathVariable("id") String id, CadastroCarteiraApiContaRequest request);
+
 }
