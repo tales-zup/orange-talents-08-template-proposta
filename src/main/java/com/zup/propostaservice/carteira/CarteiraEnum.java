@@ -2,6 +2,7 @@ package com.zup.propostaservice.carteira;
 
 public enum CarteiraEnum {
 
-    PAYPAL;
+    PAYPAL,
+    SAMSUNG_PAY;
 
 }
