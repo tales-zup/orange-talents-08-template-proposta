@@ -1,4 +1,3 @@
 FROM openjdk:11
-COPY . /usr/src/myapp
-WORKDIR /usr/src/myapp
-ENTRYPOINT ["java", "-jar", "target/proposta-service.jar"]
+COPY ./target/proposta-service.jar proposta-service.jar
+ENTRYPOINT ["java", "-jar", "proposta-service.jar"]
