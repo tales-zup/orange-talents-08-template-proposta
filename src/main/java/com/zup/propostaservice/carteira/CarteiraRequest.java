@@ -15,6 +15,11 @@ public class CarteiraRequest {
     @NotNull
     private CarteiraEnum carteira;
 
+    public CarteiraRequest(String email, CarteiraEnum carteira) {
+        this.email = email;
+        this.carteira = carteira;
+    }
+
     public String getEmail() {
         return email;
     }

@@ -3,6 +3,8 @@ package com.zup.propostaservice.cartao;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zup.propostaservice.avisodeviagem.AvisoDeViagemRequest;
 import com.zup.propostaservice.biometria.BiometriaRequest;
+import com.zup.propostaservice.carteira.CarteiraEnum;
+import com.zup.propostaservice.carteira.CarteiraRequest;
 import com.zup.propostaservice.feign.contas.ConsultaCartoesResponse;
 import com.zup.propostaservice.feign.contas.ContasApi;
 import com.zup.propostaservice.proposta.Proposta;
@@ -157,6 +159,8 @@ public class CartaoControllerTest {
                 .andExpect(jsonPath("$.ativo"). value(true));
     }
 
+    // Falta fazer funcionar o autowired de AssociadorCartaoProposta
+    // teste ainda não funciona
     @Test
     public void deveriaCadastrarAvisoDeViagem() throws Exception {
         PropostaRequest propostaRequest = new PropostaRequest("02005036005", "tales.araujo@zup.com.br",
@@ -181,6 +185,35 @@ public class CartaoControllerTest {
                 .andExpect(jsonPath("$.idCartao").value(response.getId()))
                 .andExpect(jsonPath("$.destino").value("Paris"));
 
+    }
+
+    // Falta fazer funcionar o autowired de AssociadorCartaoProposta
+    // teste ainda não funciona
+    @Test
+    public void deveriaCadastrarCarteira() throws Exception {
+        PropostaRequest propostaRequest = new PropostaRequest("02005036005", "tales.araujo@zup.com.br",
+                "Tales Araujo", "Rua Abc 123", new BigDecimal(1000));
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/propostas")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(propostaRequest))
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated());
+
+        //        associadorCartaoProposta.associarCartoesComProposta();
+        ConsultaCartoesResponse response = contasApi.consultarCartoes(1L);
+
+        CarteiraRequest carteiraRequest = new CarteiraRequest("paypal@gmail.com", CarteiraEnum.PAYPAL);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/cartoes/" + response.getId() + "cadastrar-carteira")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(carteiraRequest))
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(header().exists("Location"))
+                .andExpect(redirectedUrlPattern("/carteiras/{id}"))
+                .andExpect(jsonPath("$.email").value("paypal@gmail.com"))
+                .andExpect(jsonPath("$.carteira").value(CarteiraEnum.PAYPAL));
     }
 
 }
