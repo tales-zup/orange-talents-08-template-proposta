@@ -3,14 +3,15 @@ package com.zup.propostaservice.cartao;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zup.propostaservice.avisodeviagem.AvisoDeViagemRequest;
 import com.zup.propostaservice.biometria.BiometriaRequest;
+import com.zup.propostaservice.carteira.Carteira;
 import com.zup.propostaservice.carteira.CarteiraEnum;
+import com.zup.propostaservice.carteira.CarteiraRepository;
 import com.zup.propostaservice.carteira.CarteiraRequest;
 import com.zup.propostaservice.feign.contas.ConsultaCartoesResponse;
 import com.zup.propostaservice.feign.contas.ContasApi;
 import com.zup.propostaservice.proposta.Proposta;
 import com.zup.propostaservice.proposta.PropostaRepository;
 import com.zup.propostaservice.proposta.PropostaRequest;
-import com.zup.propostaservice.schedule.AssociadorCartaoProposta;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +55,9 @@ public class CartaoControllerTest {
 
     @Autowired
     private BloqueioCartaoRepository bloqueioCartaoRepository;
+
+    @Autowired
+    private CarteiraRepository carteiraRepository;
 
     // Falta fazer funcionar o autowired de AssociadorCartaoProposta
     // teste ainda não funciona
@@ -214,6 +218,28 @@ public class CartaoControllerTest {
                 .andExpect(redirectedUrlPattern("/carteiras/{id}"))
                 .andExpect(jsonPath("$.email").value("paypal@gmail.com"))
                 .andExpect(jsonPath("$.carteira").value(CarteiraEnum.PAYPAL));
+    }
+
+    @Test
+    public void naoDeveriaCadastrarCarteiraJaAssociadaAoCartao() throws Exception {
+        Proposta proposta = new Proposta("02005036005", "tales.araujo@zup.com.br",
+                "Tales Araujo", "Rua Abc 123", new BigDecimal(1000));
+        proposta = propostaRepository.save(proposta);
+
+        Cartao cartao = new Cartao("1234-5678-1234-5678", LocalDateTime.now(), "Tales Araujo", new BigDecimal(500), proposta);
+        cartaoRepository.save(cartao);
+
+        Carteira carteira = new Carteira(cartao, CarteiraEnum.PAYPAL, "paypal@gmail.com");
+        carteiraRepository.save(carteira);
+
+        CarteiraRequest carteiraRequest = new CarteiraRequest("paypal@gmail.com", CarteiraEnum.PAYPAL);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/cartoes/" + cartao.getId() + "cadastrar-carteira")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(carteiraRequest))
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.erro").value("Esse cartão já é associado a essa carteira."));
     }
 
 }
