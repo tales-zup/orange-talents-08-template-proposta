@@ -25,6 +25,9 @@ public class PropostaControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
+    @Autowired
+    private PropostaRepository propostaRepository;
+
     @Test
     public void deveriaCadastrarPropostaComSucesso() throws Exception {
         PropostaRequest body = new PropostaRequest("02005036005", "tales.araujo@zup.com.br",
@@ -67,6 +70,23 @@ public class PropostaControllerTest {
                         .content(new ObjectMapper().writeValueAsString(body2))
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
+    public void deveriaTrazerDadosDaProposta() throws Exception {
+        Proposta proposta = propostaRepository.save(new Proposta("02005036005", "tales.araujo@zup.com.br",
+                "Tales Araujo", "Rua Abc 123", new BigDecimal(1000)));
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/propostas/" + proposta.getId())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(proposta.getId()))
+                .andExpect(jsonPath("$.documento").value(proposta.getDocumento()))
+                .andExpect(jsonPath("$.email").value(proposta.getEmail()))
+                .andExpect(jsonPath("$.nome").value("Tales Araujo"))
+                .andExpect(jsonPath("$.endereco").value(proposta.getEndereco()))
+                .andExpect(jsonPath("$.salario").value(proposta.getSalario().setScale(1, BigDecimal.ROUND_UP)));
+
     }
 
 }
