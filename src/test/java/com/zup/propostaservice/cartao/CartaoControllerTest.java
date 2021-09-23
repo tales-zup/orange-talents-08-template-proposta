@@ -1,6 +1,7 @@
 package com.zup.propostaservice.cartao;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.zup.propostaservice.avisodeviagem.AvisoDeViagemRequest;
 import com.zup.propostaservice.biometria.BiometriaRequest;
 import com.zup.propostaservice.feign.contas.ConsultaCartoesResponse;
 import com.zup.propostaservice.feign.contas.ContasApi;
@@ -22,6 +23,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import javax.persistence.EntityNotFoundException;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -153,6 +155,32 @@ public class CartaoControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.idCartao").value(response.getId()))
                 .andExpect(jsonPath("$.ativo"). value(true));
+    }
+
+    @Test
+    public void deveriaCadastrarAvisoDeViagem() throws Exception {
+        PropostaRequest propostaRequest = new PropostaRequest("02005036005", "tales.araujo@zup.com.br",
+                "Tales Araujo", "Rua Abc 123", new BigDecimal(1000));
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/propostas")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(propostaRequest))
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated());
+
+        //        associadorCartaoProposta.associarCartoesComProposta();
+        ConsultaCartoesResponse response = contasApi.consultarCartoes(1L);
+
+        AvisoDeViagemRequest avisoDeViagemRequest = new AvisoDeViagemRequest("Paris", LocalDate.now().plusDays(30));
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/cartoes/" + response.getId() + "aviso-de-viagem")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(avisoDeViagemRequest))
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.idCartao").value(response.getId()))
+                .andExpect(jsonPath("$.destino").value("Paris"));
+
     }
 
 }

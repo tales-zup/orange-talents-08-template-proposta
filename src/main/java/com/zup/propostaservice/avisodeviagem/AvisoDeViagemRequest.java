@@ -18,6 +18,11 @@ public class AvisoDeViagemRequest {
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate dataTermino;
 
+    public AvisoDeViagemRequest(String destino, LocalDate dataTermino) {
+        this.destino = destino;
+        this.dataTermino = dataTermino;
+    }
+
     public String getDestino() {
         return destino;
     }
