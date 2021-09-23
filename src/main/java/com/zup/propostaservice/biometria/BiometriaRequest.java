@@ -30,4 +30,8 @@ public class BiometriaRequest {
     public String getFingerprint() {
         return fingerprint;
     }
+
+    public void setFingerprint(String fingerprint) {
+        this.fingerprint = fingerprint;
+    }
 }

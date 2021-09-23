@@ -8,6 +8,7 @@ import com.zup.propostaservice.proposta.Proposta;
 import com.zup.propostaservice.proposta.PropostaRepository;
 import com.zup.propostaservice.proposta.StatusProposta;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -16,6 +17,7 @@ import java.util.List;
 
 @Component
 @EnableScheduling
+@ConditionalOnProperty(value = "app.scheduling.enable", havingValue = "true", matchIfMissing = true)
 public class AssociadorCartaoProposta {
 
     @Autowired
