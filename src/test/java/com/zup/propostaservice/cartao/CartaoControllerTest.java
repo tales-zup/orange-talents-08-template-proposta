@@ -67,4 +67,27 @@ public class CartaoControllerTest {
                 .andExpect(redirectedUrlPattern("/biometrias/{id}"));
     }
 
+    // Falta fazer funcionar o autowired de AssociadorCartaoProposta
+    // teste ainda não funciona
+    @Test
+    public void deveriaCadastrarBloqueioCartao() throws Exception {
+        PropostaRequest propostaRequest = new PropostaRequest("02005036005", "tales.araujo@zup.com.br",
+                "Tales Araujo", "Rua Abc 123", new BigDecimal(1000));
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/propostas")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(propostaRequest))
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated());
+
+        associadorCartaoProposta.associarCartoesComProposta();
+        ConsultaCartoesResponse response = contasApi.consultarCartoes(1L);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/cartoes/" + response.getId() + "/bloquear")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.idCartao").value(response.getId()))
+                .andExpect(jsonPath("$.ativo").value(true));
+    }
+
 }
