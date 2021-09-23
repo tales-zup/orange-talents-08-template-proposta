@@ -83,7 +83,7 @@ public class PropostaControllerTest {
                 .andExpect(jsonPath("$.id").value(proposta.getId()))
                 .andExpect(jsonPath("$.documento").value(proposta.getDocumento()))
                 .andExpect(jsonPath("$.email").value(proposta.getEmail()))
-                .andExpect(jsonPath("$.nome").value("Tales Araujo"))
+                .andExpect(jsonPath("$.nome").value(proposta.getNome()))
                 .andExpect(jsonPath("$.endereco").value(proposta.getEndereco()))
                 .andExpect(jsonPath("$.salario").value(proposta.getSalario().setScale(1, BigDecimal.ROUND_UP)));
 
