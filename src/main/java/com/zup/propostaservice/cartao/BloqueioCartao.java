@@ -35,6 +35,10 @@ public class BloqueioCartao {
         this.dataCadastro = LocalDateTime.now();
     }
 
+    public void liberarBloqueio() {
+        this.ativo = false;
+    }
+
     public Long getId() {
         return id;
     }
