@@ -234,7 +234,7 @@ public class CartaoControllerTest {
 
         CarteiraRequest carteiraRequest = new CarteiraRequest("paypal@gmail.com", CarteiraEnum.PAYPAL);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/cartoes/" + cartao.getId() + "cadastrar-carteira")
+        mockMvc.perform(MockMvcRequestBuilders.post("/cartoes/" + cartao.getId() + "/cadastrar-carteira")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(carteiraRequest))
                         .accept(MediaType.APPLICATION_JSON))
