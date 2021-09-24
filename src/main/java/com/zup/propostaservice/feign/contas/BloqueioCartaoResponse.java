@@ -1,10 +1,10 @@
 package com.zup.propostaservice.feign.contas;
 
-public class AvisoViagemApiContaResponse {
+public class BloqueioCartaoResponse {
 
     private String resultado;
 
-    public AvisoViagemApiContaResponse(String resultado) {
+    public BloqueioCartaoResponse(String resultado) {
         this.resultado = resultado;
     }
 

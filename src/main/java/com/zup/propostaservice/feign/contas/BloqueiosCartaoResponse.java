@@ -4,12 +4,12 @@ import java.time.LocalDateTime;
 
 public class BloqueiosCartaoResponse {
 
-    private Long id;
+    private String id;
     private LocalDateTime bloqueadoEm;
     private String sistemaResponsavel;
     private Boolean ativo;
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 

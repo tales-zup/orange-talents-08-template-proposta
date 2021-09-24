@@ -11,6 +11,9 @@ public class PropostaDto {
     private String endereco;
     private BigDecimal salario;
 
+    public PropostaDto() {
+    }
+
     public PropostaDto(Proposta proposta) {
         this.id = proposta.getId();
         this.documento = proposta.getDocumento();

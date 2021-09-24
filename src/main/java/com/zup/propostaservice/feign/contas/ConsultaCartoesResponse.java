@@ -22,6 +22,14 @@ public class ConsultaCartoesResponse {
     private RenegociacaoCartaoResponse renegociacao;
     private Long idProposta;
 
+    public ConsultaCartoesResponse(String id, LocalDateTime emitidoEm, String titular, BigDecimal limite, Long idProposta) {
+        this.id = id;
+        this.emitidoEm = emitidoEm;
+        this.titular = titular;
+        this.limite = limite;
+        this.idProposta = idProposta;
+    }
+
     public String getId() {
         return id;
     }

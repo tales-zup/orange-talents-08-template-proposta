@@ -10,7 +10,7 @@ public interface ContasApi {
     ConsultaCartoesResponse consultarCartoes(@RequestParam("idProposta") Long idProposta);
 
     @PostMapping("/cartoes/{id}/bloqueios")
-    void bloquearCartao(@PathVariable("id") String id, @RequestBody BloquearCartaoRequest request);
+    BloqueioCartaoResponse bloquearCartao(@PathVariable("id") String id, @RequestBody BloquearCartaoRequest request);
 
     @PostMapping("/cartoes/{id}/avisos")
     AvisoViagemApiContaResponse avisarViagem(@PathVariable("id") String id, AvisoViagemApiContaRequest request);

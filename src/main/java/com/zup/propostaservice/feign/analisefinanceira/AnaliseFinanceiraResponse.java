@@ -7,6 +7,13 @@ public class AnaliseFinanceiraResponse {
     private String idProposta;
     private ResultadoSolicitacao resultadoSolicitacao;
 
+    public AnaliseFinanceiraResponse(String documento, String nome, String idProposta, ResultadoSolicitacao resultadoSolicitacao) {
+        this.documento = documento;
+        this.nome = nome;
+        this.idProposta = idProposta;
+        this.resultadoSolicitacao = resultadoSolicitacao;
+    }
+
     public String getDocumento() {
         return documento;
     }
