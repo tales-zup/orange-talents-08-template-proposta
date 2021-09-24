@@ -194,6 +194,32 @@ public class CartaoControllerTest {
     // Falta fazer funcionar o autowired de AssociadorCartaoProposta
     // teste ainda não funciona
     @Test
+    public void naoDeveriaCadastrarAvisoDeViagemComDataTerminoNoPassado() throws Exception {
+        PropostaRequest propostaRequest = new PropostaRequest("02005036005", "tales.araujo@zup.com.br",
+                "Tales Araujo", "Rua Abc 123", new BigDecimal(1000));
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/propostas")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(propostaRequest))
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated());
+
+        //        associadorCartaoProposta.associarCartoesComProposta();
+        ConsultaCartoesResponse response = contasApi.consultarCartoes(1L);
+
+        AvisoDeViagemRequest avisoDeViagemRequest = new AvisoDeViagemRequest("Paris", LocalDate.now().minusDays(1));
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/cartoes/" + response.getId() + "aviso-de-viagem")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(avisoDeViagemRequest))
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.erro").value("deve ser uma data futura"));
+    }
+
+    // Falta fazer funcionar o autowired de AssociadorCartaoProposta
+    // teste ainda não funciona
+    @Test
     public void deveriaCadastrarCarteira() throws Exception {
         PropostaRequest propostaRequest = new PropostaRequest("02005036005", "tales.araujo@zup.com.br",
                 "Tales Araujo", "Rua Abc 123", new BigDecimal(1000));
