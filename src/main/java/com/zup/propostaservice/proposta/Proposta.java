@@ -16,7 +16,6 @@ public class Proposta {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @CPFOrCNPJ
     @NotNull
     @Column(unique = true)
     private String documento;
@@ -53,6 +52,10 @@ public class Proposta {
 
     public Long getId() {
         return id;
+    }
+
+    public void setDocumento(String documento) {
+        this.documento = documento;
     }
 
     public String getDocumento() {

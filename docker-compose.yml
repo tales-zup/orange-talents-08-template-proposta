@@ -146,6 +146,7 @@ services:
       CONTAS_URL: http://contas:8888/api
       KEYCLOAK_AUTH_SERVER_URL: http://keycloak:8080/auth
       JAEGER_ENDPOINT: http://jaeger:14268/api/traces
+      CHAVE_CRIPTOGRAFIA_BASE: d7wraZXfpNjz9aILP3HhqiZ0y3jsaM
     depends_on:
       - contas
       - transacoes
